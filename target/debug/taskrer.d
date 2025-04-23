@@ -1,1 +1,1 @@
-C:\Users\194822024\Downloads\taskrer\target\debug\taskrer.exe: C:\Users\194822024\Downloads\taskrer\src\main.rs
+/home/bruno/taskrer/target/debug/taskrer: /home/bruno/taskrer/src/main.rs /home/bruno/taskrer/src/task.rs /home/bruno/taskrer/src/task_manager.rs
