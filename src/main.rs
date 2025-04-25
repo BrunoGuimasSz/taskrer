@@ -1,37 +1,44 @@
 mod task;
 mod task_manager;
 
-use std::io::{Result, stdin};
+use std::io::{stdin, stdout, Result, Write};
 
 fn main() -> Result<()> {
-    loop {
-        let mut input: String = String::new();
+	loop {
+		print!("Taskrer -> ");
+		let _ = stdout().flush();
 
-        stdin()
-            .read_line(&mut input)
-            .expect("Error while reading line");
+		let mut input: String = String::new();
 
-        let cleaned_input = input.trim().to_string();
+		stdin()
+			.read_line(&mut input)
+			.expect("Error while reading line");
 
-        if cleaned_input == "exit" || cleaned_input == "quit" {
-            break;
-        }
+		let cleaned_input = input.trim().to_string();
 
-        command_handler(&input);
-    }
+		if cleaned_input == "exit" || cleaned_input == "quit" {
+			break;
+		}
 
-    Ok(())
+		command_handler(&input);
+	}
+
+	Ok(())
 }
 
 fn command_handler(input: &str) {
-    let token_array: Vec<String> = input
-        .split_whitespace()
-        .map(|token| token.to_string())
-        .collect();
+	let token_array: Vec<String> = input
+		.split_whitespace()
+		.map(|token| token.to_string())
+		.collect();
 
-    match token_array[0].as_str() {
-        "create" => task_manager::create_task(token_array),
-        "list" => task_manager::list_tasks(),
-        _ => println!("Command not found: {}", token_array[0]),
-    }
+	match token_array[0].as_str() {
+		"create" => task_manager::create_task(token_array),
+		"list" => task_manager::list_tasks(),
+		"delete" => task_manager::delete_task(token_array),
+		"mark-done" => task_manager::mark_task(token_array, task::TaskStatus::Done),
+		"mark-in-progress" => task_manager::mark_task(token_array, task::TaskStatus::InProgress),
+		"mark-todo" => task_manager::mark_task(token_array, task::TaskStatus::Todo),
+		_ => println!("Command not found: {}", token_array[0]),
+	}
 }
