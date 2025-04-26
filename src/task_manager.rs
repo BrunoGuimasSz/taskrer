@@ -8,7 +8,7 @@ const DEFAULT_STATUS: TaskStatus = TaskStatus::Todo;
 pub fn create_task(token_array: Vec<String>) {
 	let mut task_vector = load_tasks();
 
-	let new_task_description: String = get_description(token_array);
+	let new_task_description: String = get_description(&token_array);
 
 	let new_task_id = generate_id();
 
@@ -25,11 +25,11 @@ pub fn create_task(token_array: Vec<String>) {
 	let _ = save_tasks(task_vector);
 }
 
-fn get_description(token_array: Vec<String>) -> String {
+fn get_description(token_array: &Vec<String>) -> String {
 	let mut description: String = String::new();
 
 	for token in token_array {
-		if token.as_str() == "create" {
+		if token.as_str() == "create" || token.as_str() == "update"{
 			continue;
 		}
 
@@ -41,9 +41,9 @@ fn get_description(token_array: Vec<String>) -> String {
 	description
 }
 
-fn generate_id() -> u32 {
+fn generate_id() -> u8 {
 	let task_vector: Vec<Task> = load_tasks();
-	let mut higher_id: u32 = 0;
+	let mut higher_id: u8 = 0;
 
 	for task in task_vector.iter() {
 		if task.id > higher_id {
@@ -63,8 +63,9 @@ pub fn list_tasks() {
 		return;
 	}
 
+	println!(" Id -		   Description                 - Status");
 	for task in task_vector.iter() {
-		println!("{:3} - {:40} {}", task.id, task.description, task.status_str());
+		println!("{:3} - {:40} - {}", task.id, task.description, task.status_str());
 	}
 }
 
@@ -74,7 +75,7 @@ pub fn clear_console() {
 
 pub fn delete_task(token_array: Vec<String>) {
 	let last_item = token_array.len() - 1;
-	let id: u32 = token_array[last_item].parse().unwrap();
+	let id: u8 = token_array[last_item].parse().unwrap();
 	let mut task_vector: Vec<Task> = load_tasks();
 
 	clear_console();
@@ -90,9 +91,30 @@ pub fn delete_task(token_array: Vec<String>) {
 	save_tasks(task_vector).unwrap()
 }
 
+pub fn update_task(mut token_array: Vec<String>) {
+	let id: u8 = token_array[1].parse().unwrap();
+	token_array.remove(1);
+	let description = get_description(&token_array);
+	let mut task_vector: Vec<Task> = load_tasks();
+
+
+	clear_console();
+
+	for task in task_vector.iter_mut() {
+		if task.id == id {
+			task.description = description;
+			print!("Task {} updated as {}", id, task.description);
+			let _ = save_tasks(task_vector);
+			return;
+		}
+	}
+
+	println!("Task not found");
+}
+
 pub fn mark_task(token_array: Vec<String>, status: TaskStatus) {
 	let last_item = token_array.len() - 1;
-	let id: u32 = token_array[last_item].parse().unwrap();
+	let id: u8 = token_array[last_item].parse().unwrap();
 	let mut task_vector: Vec<Task> = load_tasks();
 
 	clear_console();

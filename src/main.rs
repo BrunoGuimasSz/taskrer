@@ -5,7 +5,7 @@ use std::io::{stdin, stdout, Result, Write};
 
 fn main() -> Result<()> {
 	loop {
-		print!("Taskrer -> ");
+		print!("\nTaskrer -> ");
 		let _ = stdout().flush();
 
 		let mut input: String = String::new();
@@ -39,6 +39,7 @@ fn command_handler(input: &str) {
 		"mark-done" => task_manager::mark_task(token_array, task::TaskStatus::Done),
 		"mark-in-progress" => task_manager::mark_task(token_array, task::TaskStatus::InProgress),
 		"mark-todo" => task_manager::mark_task(token_array, task::TaskStatus::Todo),
+		"update" => task_manager::update_task(token_array),
 		_ => println!("Command not found: {}", token_array[0]),
 	}
 }

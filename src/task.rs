@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Task {
-        pub id: u32,
+        pub id: u8,
         pub description: String,
 	pub status: TaskStatus,
 }
